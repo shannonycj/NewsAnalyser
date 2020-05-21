@@ -1,0 +1,5 @@
+{
+    "reuters_search_entity": "Amazon",
+    "database_path": "./data/operation_data.db",
+    "corpora_path": "./data/corpora"
+}
