@@ -1,5 +1,9 @@
+# operational logs
+*.log
 # sqlite db
 *.db
+# corpora
+*.txt
 # OSX sys file
 .DS_Store
 # vscode config

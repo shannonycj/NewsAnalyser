@@ -11,7 +11,8 @@ ent = __config['reuters_search_entity']
 class ReutersSpider(scrapy.Spider):
     name = 'reuters'
     allowed_domains = ['reuters.com']
-    start_urls = [f'https://www.reuters.com/search/news?blob={ent}']
+    __condition = f'news?blob={ent}&sortBy=date&dateRange=all'
+    start_urls = [f'https://www.reuters.com/search/{__condition}']
 
     def parse(self, response):
         """

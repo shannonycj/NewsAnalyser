@@ -9,8 +9,13 @@ Session = sqla.orm.sessionmaker(bind=engine)
 
 def insert_new_meta(item):
     sess = Session()
+    item_id = None
     try:
-        sess.add(db_orm.ArticlesMeta(**item))
+        article_meta = db_orm.ArticlesMeta(**item)
+        sess.add(article_meta)
+        sess.commit()
+        item_id = article_meta.id
     except Exception as e:
         utils.log(str(e))
     sess.close()
+    return item_id

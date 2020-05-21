@@ -9,7 +9,7 @@ Base = declarative_base()
 
 class ArticlesMeta(Base):
     __tablename__ = 'articles_meta'
-    id = sqla.Column(sqla.Integer, autoincrement=1, primary_key=True)
+    id = sqla.Column(sqla.Integer, primary_key=True)
     title = sqla.Column(sqla.String(255), nullable=False)
     publish_date = sqla.Column(sqla.DATE)
     url = sqla.Column(sqla.String(255), nullable=False)
@@ -19,7 +19,7 @@ class ArticlesMeta(Base):
 
 class ModelOutput(Base):
     __tablename__ = 'model_output'
-    id = sqla.Column(sqla.Integer, autoincrement=1, primary_key=True)
+    id = sqla.Column(sqla.Integer, primary_key=True)
     meta_id = sqla.Column(sqla.Integer, sqla.ForeignKey('articles_meta.id'))
     tfidf = sqla.Column(sqla.String(255))
     lda_class = sqla.Column(sqla.Integer)
