@@ -23,3 +23,19 @@ def save_article(article_id, article):
             f.write(article)
     except Exception as e:
         log(str(e))
+
+
+def load_articles(article_ids):
+    corpora_path = __config['corpora_path']
+    files = os.listdir(corpora_path)
+    for i in article_ids:
+        file_name = i + '.txt'
+        if file_name in files:
+            try:
+                with open(os.path.join(corpora_path, file_name), 'r') as fs:
+                    article = fs.read()
+                yield i, article
+            except Exception as e:
+                msg = f'Loading file "{file_name}" failed.\n' + str(e)
+                log(msg)
+        yield i, None
