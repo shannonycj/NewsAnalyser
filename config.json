@@ -1,5 +1,1 @@
-{
-    "reuters_search_entity": "Amazon",
-    "database_path": "./data/operation_data.db",
-    "corpora_path": "./data/corpora"
-}
+{"__comments": "reuters_search_entity stores temp variable for searching url", "reuters_search_entity": "Huawei", "database_path": "./data/operation_data.db", "corpora_path": "./data/corpora", "logging_path": "./data/operation_logs.log"}
