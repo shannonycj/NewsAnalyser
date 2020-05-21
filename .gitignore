@@ -1,3 +1,5 @@
+# sqlite db
+*.db
 # OSX sys file
 .DS_Store
 # vscode config

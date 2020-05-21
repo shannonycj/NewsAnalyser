@@ -1,9 +1,10 @@
 import os
 import sqlalchemy as sqla
+from sqlalchemy.ext.declarative import declarative_base
 from config import __config
 
 
-Base = sqla.ext.declarative_base()
+Base = declarative_base()
 
 
 class ArticlesMeta(Base):
