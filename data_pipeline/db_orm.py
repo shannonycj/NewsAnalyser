@@ -17,13 +17,12 @@ class ArticlesMeta(Base):
     original_key = sqla.Column(sqla.String(255), nullable=False)
 
 
-class ModelOutput(Base):
-    __tablename__ = 'model_output'
+class TfidfMetric(Base):
+    __tablename__ = 'tfidf_metric'
     id = sqla.Column(sqla.Integer, primary_key=True)
     meta_id = sqla.Column(sqla.Integer, sqla.ForeignKey('articles_meta.id'))
-    tfidf = sqla.Column(sqla.String(255))
-    lda_class = sqla.Column(sqla.Integer)
-    lda_repr = sqla.Column(sqla.String(255))
+    word = sqla.Column(sqla.String(255), nullable=False)
+    tfidf = sqla.Column(sqla.Float, nullable=False)
 
 
 def init_database():

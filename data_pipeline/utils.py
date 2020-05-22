@@ -86,7 +86,7 @@ def build_gensim_corpus(docs, dictionary):
     return [dictionary.doc2bow(doc) for doc in docs]
 
 
-def gensim_pipline(article_ids, min_count=5, no_below=1, no_above=1.):
+def gensim_pipeline(article_ids, min_count=5, no_below=1, no_above=1.):
     articles = load_articles(article_ids)
     docs, loaded_idx = [], []
     for i, article in articles:

@@ -32,6 +32,15 @@ def insert_new_meta(item):
     return item_id
 
 
+def insert_tfidf_metric(article_id, metrics):
+    sess = Session()
+    objs = [db_orm.TfidfMetric(meta_id=article_id, word=m[0], tfidf=m[1])
+            for m in metrics]
+    sess.add_all(objs)
+    sess.commit()
+    sess.close()
+
+
 def get_tfidf(topk=5):
     """
     Use existing data in corpora/ to generate top tfidf words for each doc
@@ -42,12 +51,16 @@ def get_tfidf(topk=5):
     # improve preprocessing refering to notebook
     df_articles = query_all_articles()
     idx = df_articles.id.tolist()
-    dictionary, corpus, loaded_idx = utils.gensim_pipline(idx)
+    idx_str = ', '.join(map(str, idx))
+    print(f'updating tfidf metrics for articles: {idx_str}')
+    dictionary, corpus, loaded_idx = utils.gensim_pipeline(idx)
     model = utils.build_tfidf_model(corpus)
-    report = {}
+    sess = Session()
+    sess.query(db_orm.TfidfMetric).delete()
+    sess.close()
     for article_id, doc in zip(loaded_idx, corpus):
         weights = model[doc]
         sorted_weights = sorted(weights, key=lambda w: w[1], reverse=True)
         r = map(lambda w: (dictionary.get(w[0]), w[1]), sorted_weights[:topk])
-        report[article_id] = [*r]
-    return report
+        insert_tfidf_metric(article_id, r)
+    print('update tfidf finished.')
