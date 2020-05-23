@@ -118,6 +118,11 @@ def create_hash_path(path):
     return save_path
 
 
+def check_make_path(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+
 def train_lda(dictionary, corpus, num_topics=10, chunksize=2000,
               iterations=400, passes=20):
     # Make a index to word dictionary.
@@ -135,6 +140,7 @@ def train_lda(dictionary, corpus, num_topics=10, chunksize=2000,
         passes=passes,
         eval_every=None
     )
+    check_make_path(__config['lda_model_path'])
     path = os.path.join(create_hash_path(__config['lda_model_path']),
                         'model.pkl')
     joblib.dump(model, path)
