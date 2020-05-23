@@ -1,14 +1,15 @@
 import os
 import sqlalchemy as sqla
+from sqlalchemy.ext.declarative import declarative_base
 from config import __config
 
 
-Base = sqla.ext.declarative_base()
+Base = declarative_base()
 
 
 class ArticlesMeta(Base):
     __tablename__ = 'articles_meta'
-    id = sqla.Column(sqla.Integer, autoincrement=1, primary_key=True)
+    id = sqla.Column(sqla.Integer, primary_key=True)
     title = sqla.Column(sqla.String(255), nullable=False)
     publish_date = sqla.Column(sqla.DATE)
     url = sqla.Column(sqla.String(255), nullable=False)
@@ -16,13 +17,23 @@ class ArticlesMeta(Base):
     original_key = sqla.Column(sqla.String(255), nullable=False)
 
 
-class ModelOutput(Base):
-    __tablename__ = 'model_output'
-    id = sqla.Column(sqla.Integer, autoincrement=1, primary_key=True)
+class TfidfMetric(Base):
+    __tablename__ = 'tfidf_metric'
+    id = sqla.Column(sqla.Integer, primary_key=True)
     meta_id = sqla.Column(sqla.Integer, sqla.ForeignKey('articles_meta.id'))
-    tfidf = sqla.Column(sqla.String(255))
-    lda_class = sqla.Column(sqla.Integer)
-    lda_repr = sqla.Column(sqla.String(255))
+    word = sqla.Column(sqla.String(255), nullable=False)
+    tfidf = sqla.Column(sqla.Float, nullable=False)
+    load_dt = sqla.Column(sqla.DateTime, nullable=False)
+
+
+class LDATopic(Base):
+    __tablename__ = 'lda_topic'
+    id = sqla.Column(sqla.Integer, primary_key=True)
+    topic_id = sqla.Column(sqla.Integer, nullable=False)
+    word = sqla.Column(sqla.String(255), nullable=False)
+    word_prob = sqla.Column(sqla.Float, nullable=False)
+    topic_coherence = sqla.Column(sqla.Float, nullable=False)
+    load_dt = sqla.Column(sqla.DateTime, nullable=False)
 
 
 def init_database():
