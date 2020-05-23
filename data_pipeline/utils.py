@@ -1,7 +1,10 @@
 import os
 import logging
+import hashlib
+from datetime import datetime
 import nltk
 import gensim
+import joblib
 from config import __config
 
 
@@ -97,9 +100,49 @@ def gensim_pipeline(article_ids, min_count=5, no_below=1, no_above=1.):
     docs = add_multigrams(docs, min_count)
     dictionary = build_gensim_dictionary(docs, no_below, no_above)
     corpus = build_gensim_corpus(docs, dictionary)
+    print('Number of unique tokens: %d' % len(dictionary))
+    print('Number of documents: %d' % len(corpus))
     return dictionary, corpus, loaded_idx
 
 
 def build_tfidf_model(corpus):
     model = gensim.models.tfidfmodel.TfidfModel(corpus)
+    return model
+
+
+def create_hash_path(path):
+    s = str(datetime.now().timestamp()).encode('utf-8')
+    folder = hashlib.sha256(s).hexdigest()[:10]
+    save_path = os.path.join(path, folder)
+    os.mkdir(save_path)
+    return save_path
+
+
+def check_make_path(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+
+def train_lda(dictionary, corpus, num_topics=10, chunksize=2000,
+              iterations=400, passes=20):
+    # Make a index to word dictionary.
+    _ = dictionary[0]  # This is only to "load" the dictionary.
+    id2word = dictionary.id2token
+    print('Training LDA model...')
+    model = gensim.models.LdaModel(
+        corpus=corpus,
+        id2word=id2word,
+        chunksize=chunksize,
+        alpha='auto',
+        eta='auto',
+        iterations=iterations,
+        num_topics=num_topics,
+        passes=passes,
+        eval_every=None
+    )
+    check_make_path(__config['lda_model_path'])
+    path = os.path.join(create_hash_path(__config['lda_model_path']),
+                        'model.pkl')
+    joblib.dump(model, path)
+    print('LDA model has been saved.')
     return model

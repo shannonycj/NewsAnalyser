@@ -1,3 +1,4 @@
+/data/models/LDA_models/
 # operational logs
 *.log
 # sqlite db
