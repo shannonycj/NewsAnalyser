@@ -23,6 +23,7 @@ class TfidfMetric(Base):
     meta_id = sqla.Column(sqla.Integer, sqla.ForeignKey('articles_meta.id'))
     word = sqla.Column(sqla.String(255), nullable=False)
     tfidf = sqla.Column(sqla.Float, nullable=False)
+    load_dt = sqla.Column(sqla.DateTime, nullable=False)
 
 
 class LDATopic(Base):
@@ -32,6 +33,7 @@ class LDATopic(Base):
     word = sqla.Column(sqla.String(255), nullable=False)
     word_prob = sqla.Column(sqla.Float, nullable=False)
     topic_coherence = sqla.Column(sqla.Float, nullable=False)
+    load_dt = sqla.Column(sqla.DateTime, nullable=False)
 
 
 def init_database():
