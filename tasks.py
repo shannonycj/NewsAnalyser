@@ -25,7 +25,7 @@ def refresh_tfidf(c, topk=5):
 @invoke.task
 def refresh_lda(c, num_topics=10, chunksize=2000, iterations=400, passes=20):
     from data_pipeline import query_interface as dqi
-    dqi.get_lda_topics(num_topics, chunksize, iterations, passes)
+    dqi.get_lda(num_topics, chunksize, iterations, passes)
 
 
 @invoke.task

@@ -76,7 +76,7 @@ def insert_lda_topics(topic_id, topic_repr, topic_coherence, load_dt):
     objs = []
     for prob, word in topic_repr:
         lda_topic = db_orm.LDATopic(
-            topic_id=i, word=word, word_prob=prob,
+            topic_id=topic_id, word=word, word_prob=prob,
             topic_coherence=topic_coherence, load_dt=load_dt)
         objs.append(lda_topic)
     sess.add_all(objs)

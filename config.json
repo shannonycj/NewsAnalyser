@@ -1,8 +1,1 @@
-{
-    "__comments": "reuters_search_entity stores temp variable for searching url",
-    "reuters_search_entity": "China",
-    "database_path": "./data/operation_data.db",
-    "corpora_path": "./data/corpora",
-    "logging_path": "./data/operation_logs.log",
-    "lda_model_path": "./data/models/LDA_Models"
-}
+{"__comments": "reuters_search_entity stores temp variable for searching url", "reuters_search_entity": "syria", "database_path": "./data/operation_data.db", "corpora_path": "./data/corpora", "logging_path": "./data/operation_logs.log", "lda_model_path": "./data/models/LDA_Models"}
