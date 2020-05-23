@@ -32,6 +32,12 @@ def insert_new_meta(item):
     return item_id
 
 
+def clean_up_table(table):
+    sess = Session()
+    sess.query(table).delete()
+    sess.close()
+
+
 def insert_tfidf_metric(article_id, metrics):
     sess = Session()
     objs = [db_orm.TfidfMetric(meta_id=article_id, word=m[0], tfidf=m[1])
@@ -48,19 +54,41 @@ def get_tfidf(topk=5):
     :return: [description]
     :rtype: [type]
     """
-    # improve preprocessing refering to notebook
     df_articles = query_all_articles()
     idx = df_articles.id.tolist()
     idx_str = ', '.join(map(str, idx))
     print(f'updating tfidf metrics for articles: {idx_str}')
     dictionary, corpus, loaded_idx = utils.gensim_pipeline(idx)
     model = utils.build_tfidf_model(corpus)
-    sess = Session()
-    sess.query(db_orm.TfidfMetric).delete()
-    sess.close()
+    clean_up_table(db_orm.TfidfMetric)
     for article_id, doc in zip(loaded_idx, corpus):
         weights = model[doc]
         sorted_weights = sorted(weights, key=lambda w: w[1], reverse=True)
         r = map(lambda w: (dictionary.get(w[0]), w[1]), sorted_weights[:topk])
         insert_tfidf_metric(article_id, r)
     print('update tfidf finished.')
+
+
+def get_lda_topics(num_topics=10, chunksize=2000, iterations=400, passes=20):
+    df_articles = query_all_articles()
+    idx = df_articles.id.tolist()
+    idx_str = ', '.join(map(str, idx))
+    print(f'updating LDA topics metrics for articles: {idx_str}')
+    dictionary, corpus, loaded_idx = utils.gensim_pipeline(idx)
+    model = utils.train_lda(dictionary, corpus, num_topics, chunksize,
+                            iterations, passes)
+    clean_up_table(db_orm.LDATopic)
+    top_topics = model.top_topics(corpus)
+    sess = Session()
+    objs = []
+    for i, topic in enumerate(top_topics):
+        topic_coherence = topic[1]
+        for prob, word in topic[0]:
+            lda_topic = db_orm.LDATopic(
+                topic_id=i, word=word, word_prob=prob,
+                topic_coherence=topic_coherence)
+            objs.append(lda_topic)
+        sess.add_all(objs)
+        sess.commit()
+    sess.close()
+    print('update lda topics finished.')

@@ -25,6 +25,15 @@ class TfidfMetric(Base):
     tfidf = sqla.Column(sqla.Float, nullable=False)
 
 
+class LDATopic(Base):
+    __tablename__ = 'lda_topic'
+    id = sqla.Column(sqla.Integer, primary_key=True)
+    topic_id = sqla.Column(sqla.Integer, nullable=False)
+    word = sqla.Column(sqla.String(255), nullable=False)
+    word_prob = sqla.Column(sqla.Float, nullable=False)
+    topic_coherence = sqla.Column(sqla.Float, nullable=False)
+
+
 def init_database():
     db_path = __config['database_path']
     is_existing = os.path.exists(db_path)

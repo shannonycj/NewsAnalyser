@@ -20,3 +20,15 @@ def crawl(c):
 def refresh_tfidf(c, topk=5):
     from data_pipeline import query_interface as dqi
     dqi.get_tfidf(topk)
+
+
+@invoke.task
+def refresh_lda(c, num_topics=10, chunksize=2000, iterations=400, passes=20):
+    from data_pipeline import query_interface as dqi
+    dqi.get_lda_topics(num_topics, chunksize, iterations, passes)
+
+
+@invoke.task
+def clean(c):
+    c.run("rm ./data/corpora/*.txt")
+    c.run("rm ./data/*.db")
